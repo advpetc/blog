@@ -1,8 +1,8 @@
 baseURL = "https://blog.peterchen.xyz/"
 languageCode = "en-us"
-title = "Peter's Blog"
+title = "颢阳's Blog"
 theme = "smol"
-copyright = "Peter Chen"
+copyright = "颢阳"
 
 [params]
     subtitle = "blog for everything"

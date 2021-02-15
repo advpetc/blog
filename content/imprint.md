@@ -5,5 +5,7 @@ draft: false
 author: "Peter"
 ---
 
-Hi, this is me. I collect everything I found is interesting.
+Hi, this is me. 陈颢阳 | Chén HàoYāng | Peter Chen.
+
+I collect everything I found is interesting.
 
