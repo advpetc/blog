@@ -1,0 +1,39 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><title>Django浅谈</title><link rel=stylesheet href=/css/style.css></head><body><header>===================<br>== <a href=https://blog.peterchen.xyz/>颢阳's Blog</a> ==<br>===================<div style=float:right>blog for everything</div><br><p><nav><a href=/><b>Start</b></a>.
+<a href=/posts/><b>Posts</b></a>.
+<a href=/categories/><b>Categories</b></a>.
+<a href=/tags/><b>Tags</b></a>.</nav></p><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true,processEnvironments:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};window.addEventListener('load',(event)=>{document.querySelectorAll("mjx-container").forEach(function(x){x.parentElement.classList+='has-jax'})});</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script></header><main><article><h1>Django浅谈</h1><b><time>06.20.2017 10:57</time></b>
+<a href=/tags/django>Django</a><div><h2 id=django为何物>Django为何物</h2><p><a href=https://www.djangoproject.com/>Django</a>是在网页开发中比较常用的一个框架，主要帮助搭建一个类似MVC的workflow. 免去了很多繁琐的网页界面交互的问题，作者还特别在官网上写</p><blockquote><p>The web framework for perfectionists with deadlines.</p></blockquote><p>意思就是为追求完美却又被迫在deadline之前完成所准备的一个工具。</p><h2 id=环境搭建>环境搭建</h2><p>作为<a href=https://www.continuum.io/Anaconda-Overview>anaconda</a>的忠实粉丝，在Linux的操作环境中我还是在此安利一波。还记得去年用scrapy写爬虫的时候为了安装依赖走了很多弯路，由于当时使用的是<a href=https://brew.sh/>homebrew</a>，brew里面并没有srcapy，于是又研究了好半天设置环境变量等遇到的种种问题，最终还是放弃了决定安装ubuntu才搞定。后来很偶然的在微信上看到了anaconda才发现自己好蠢……</p><p>所以安装anaconda是为了在自己喜欢的python环境中进行开发，本文讲的内容也都是在python3的环境下开发。
+首先选择要使用的python环境，如果是anaconda启用的方法是：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ source activate <span style=color:#e6db74>&#39;your-env-name&#39;</span>
+</code></pre></div><p>然后使用pip安装django（目前最新版本是1.11.2):</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ pip install Django<span style=color:#f92672>==</span>1.11.2
+</code></pre></div><p>检查安装：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>&gt;&gt;&gt;</span> <span style=color:#f92672>import</span> django
+<span style=color:#f92672>&gt;&gt;&gt;</span> <span style=color:#66d9ef>print</span>(django<span style=color:#f92672>.</span>get_version())
+<span style=color:#ae81ff>1.11</span>
+</code></pre></div><p>我比较喜欢的IDE是Jetbrain的<a href=https://www.jetbrains.com/pycharm/>PyCharm CE</a>，个人认为CE已经完全满足我的需要了。</p><p>然后就可以cd到自己的目录下开始创建django web app了！</p><h2 id=使用>使用</h2><p>在自己的目录下使用指令：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ django-admin startproject mysite
+</code></pre></div><p>之后会创建一个叫mysite的文件夹，里面的东西长这样：</p><pre><code>mysite/
+    manage.py
+    mysite/
+        __init__.py
+        settings.py
+        urls.py
+        wsgi.py
+</code></pre><p>最有用的manage.py可以帮助你在command line中开启服务器，进入对应的python shell去测试生产的models的状况。</p><ul><li>启动server：</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ ./manage.py server
+</code></pre></div><p><strong>这样默认在127.0.0.1的8000端口开启，如果想再别的地方：xxx.xxx.xxx.xxx:xxxx</strong></p><ul><li>启动shell:</li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ ./manage.py shell
+</code></pre></div><p>在使用自建的model时候不要忘记import:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>&gt;&gt;&gt;</span> <span style=color:#f92672>from</span> appName.models <span style=color:#f92672>import</span> YourModel1, YourModel2
+</code></pre></div><p>官网上给了一个制作投票软件的非常详细的<a href=https://docs.djangoproject.com/en/1.11/intro/>教程</a>，在此不多赘述。</p><h2 id=小tips>小tips</h2><ul><li><p><strong>在设计models的时候一定要考虑每类数据之间的关系:</strong>
+在Django中有三种数据间关系：Many-to-many, Many-to-one, one-to-one, 具体参见官方的<a href=https://docs.djangoproject.com/en/1.11/topics/db/examples/>documentation</a></p></li><li><p><strong>充分利用Django的URL conf：</strong>
+Django是可以帮助自定义url pattern的，例如：</p></li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>url(
+       <span style=color:#e6db74>r</span><span style=color:#e6db74>&#39;^$&#39;</span>,
+       views<span style=color:#f92672>.</span>homepage,
+       name<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;homepage&#39;</span>
+   ),
+</code></pre></div><blockquote><p>便是类似"127.0.0.1:8000/"</p></blockquote><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python>url(
+       <span style=color:#e6db74>r</span><span style=color:#e6db74>&#39;^(?P&lt;voteresult_id&gt;[0-9]+)/$&#39;</span>,
+       views<span style=color:#f92672>.</span>vote,
+       name<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;vote&#39;</span>
+   )
+</code></pre></div><blockquote><p>便是类似"127.0.0.1:8000/123"</p></blockquote><p>因此在使用GET request的时候会方便很多,不过要注意用户输入的内容如果在GET中要显示的话文本要在html中用js二次处理才可以，避免出现类似“/ \”等会混淆的字符串。</p><ul><li><p><strong>处理HttpResponse多用render：</strong>
+这个就很直接了，为啥人家给了shortcut不用呢，使用render的时候不管是通过ajax生成的还是普通的post或者get都可以正确的反馈，节省了很多的时间。（不过前提要写好ajax😄)</p></li><li><p><strong>防止用户刷新界面：</strong>
+这个小tip是针对在设计前端时的一个问题，我处理的方式是在进入链接之后即刻跳转到稳定界面，只要在HTML中添加</p></li></ul><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>window.location.href = &#34;/result/{{vote_item.id}}&#34;;
+</code></pre></div><p>类似这样的强制跳转就可以了，这也是目前我认为最简单的处理方式，当然你也可以用python的session来通过cache来判断，但是会很麻烦。</p><p>以后这里还会不定期的添加小tips</p></div></article></main><aside><div><div><h3>LATEST POSTS</h3></div><div><ul><li><a href=/posts/create-responsive-shortcode/>Create Responsive Shortcode</a></li><li><a href=/posts/how-do-i-create-this-site/>How Do I Create This Site</a></li><li><a href=/posts/system-design/>System Design</a></li><li><a href=/posts/2017-11-15-ios-fundamentals-2/>iOS Fundamentals Part 2</a></li><li><a href=/posts/2017-11-15-ios-fundamentals-1/>iOS Fundamentals Part 1</a></li></ul></div></div></aside><footer><p>&copy; 2021 <a href=https://blog.peterchen.xyz/><b>颢阳</b></a>.
+<a href=https://github.com/advpetc><b>Github</b></a>.
+<a href=/imprint><b>Imprint</b></a>.</p></footer></body></html>

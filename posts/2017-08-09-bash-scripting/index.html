@@ -1,0 +1,167 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><title>学习bash脚本</title><link rel=stylesheet href=/css/style.css></head><body><header>===================<br>== <a href=https://blog.peterchen.xyz/>颢阳's Blog</a> ==<br>===================<div style=float:right>blog for everything</div><br><p><nav><a href=/><b>Start</b></a>.
+<a href=/posts/><b>Posts</b></a>.
+<a href=/categories/><b>Categories</b></a>.
+<a href=/tags/><b>Tags</b></a>.</nav></p><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:true,processEnvironments:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};window.addEventListener('load',(event)=>{document.querySelectorAll("mjx-container").forEach(function(x){x.parentElement.classList+='has-jax'})});</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script></header><main><article><h1>学习bash脚本</h1><b><time>08.09.2017 13:32</time></b>
+<a href=/tags/shell>shell</a><div><blockquote><p>everything is about efficiency</p></blockquote><h2 id=介绍>介绍</h2><p>最近学习了一下bash脚本的语法，感觉非常的实用，比如之前的分享的Gist中的按期备份数据库的脚本：</p><p><a href=https://gist.github.com/advpetc/9ec48862fa2f64ed5505cb39c47a56ec>Backup Scripts written in bash</a></p><p>感觉还是蛮酷的，在这里分享一下基本的语法。</p><h2 id=pattern-substitution>Pattern substitution</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>STR<span style=color:#f92672>=</span>/path/to/foo.c
+
+echo <span style=color:#e6db74>${</span>STR%.c<span style=color:#e6db74>}</span>      <span style=color:#75715e>#=&gt; &#34;/path/to/foo&#34;</span>
+echo <span style=color:#e6db74>${</span>STR%.c<span style=color:#e6db74>}</span>.o    <span style=color:#75715e>#=&gt; &#34;/path/to/foo.o&#34;</span>
+echo <span style=color:#e6db74>${</span>STR##*.<span style=color:#e6db74>}</span>     <span style=color:#75715e>#=&gt; &#34;c&#34; (extension)</span>
+
+BASE<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>STR##*/<span style=color:#e6db74>}</span>     <span style=color:#75715e>#=&gt; &#34;foo.c&#34; (basepath)</span>
+DIR<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>SRC%$BASE<span style=color:#e6db74>}</span>    <span style=color:#75715e>#=&gt; &#34;/path/to&#34;</span>
+</code></pre></div><h2 id=substitutions-by-regex>Substitutions by regex</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>echo <span style=color:#e6db74>${</span>STR/hi/hello<span style=color:#e6db74>}</span>          <span style=color:#75715e># Replace first match</span>
+echo <span style=color:#e6db74>${</span>STR//hi/hello<span style=color:#e6db74>}</span>         <span style=color:#75715e># Replace all matches</span>
+echo <span style=color:#e6db74>${</span>STR/#hi/hello<span style=color:#e6db74>}</span>         <span style=color:#75715e># ^hi</span>
+echo <span style=color:#e6db74>${</span>STR/%hi/hello<span style=color:#e6db74>}</span>         <span style=color:#75715e># hi$</span>
+
+echo <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>STR:0:3<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>             <span style=color:#75715e># .substr(0, 3) -- position, length</span>
+echo <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>STR<span style=color:#66d9ef>:-</span>3:3<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>            <span style=color:#75715e># Negative position = from the right</span>
+
+echo <span style=color:#e6db74>${#</span>line<span style=color:#e6db74>}</span>                 <span style=color:#75715e># Length of $line</span>
+
+<span style=color:#f92672>[</span> -z <span style=color:#e6db74>&#34;</span>$CC<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span> <span style=color:#f92672>&amp;&amp;</span> CC<span style=color:#f92672>=</span>gcc        <span style=color:#75715e># CC ||= &#34;gcc&#34;  assignment</span>
+<span style=color:#e6db74>${</span>CC:=gcc<span style=color:#e6db74>}</span>                    <span style=color:#75715e># $CC || &#34;gcc&#34;</span>
+<span style=color:#e6db74>${</span>CC<span style=color:#66d9ef>:-</span>gcc<span style=color:#e6db74>}</span>                    <span style=color:#75715e># same as above</span>
+</code></pre></div><h2 id=reading-input>Reading Input</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>echo -n <span style=color:#e6db74>&#34;Proceed? [y/n]: &#34;</span>
+read ans
+echo $ans
+
+read -n <span style=color:#ae81ff>1</span> ans    <span style=color:#75715e># Just one character</span>
+</code></pre></div><h2 id=loops>Loops</h2><p><strong>Basic for loop</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>for</span> i in /etc/rc.*; <span style=color:#66d9ef>do</span>
+  echo $i
+<span style=color:#66d9ef>done</span>
+</code></pre></div><p><strong>Ranges</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>for</span> i in <span style=color:#f92672>{</span>1..5<span style=color:#f92672>}</span>; <span style=color:#66d9ef>do</span>
+    echo <span style=color:#e6db74>&#34;Welcome </span>$i<span style=color:#e6db74>&#34;</span>
+<span style=color:#66d9ef>done</span>
+</code></pre></div><p><strong>Reading Lines</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat file.txt | <span style=color:#66d9ef>while</span> read line; <span style=color:#66d9ef>do</span>
+  echo $line
+<span style=color:#66d9ef>done</span>
+</code></pre></div><h2 id=functions>Functions</h2><p><strong>Defining functions</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>myfunc<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> ... <span style=color:#f92672>}</span>
+fuction myfunc <span style=color:#f92672>{</span> ... <span style=color:#f92672>}</span>
+fuction myfunc<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> ... <span style=color:#f92672>}</span>
+Returning strings
+
+myfunc<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+    local myresult<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;some value&#39;</span>
+    echo $myresult
+<span style=color:#f92672>}</span>
+
+result<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>myfunc<span style=color:#66d9ef>)</span>
+</code></pre></div><p><strong>Errors</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>myfunc<span style=color:#f92672>()</span> <span style=color:#f92672>{</span> <span style=color:#66d9ef>return</span> 1; <span style=color:#f92672>}</span>
+</code></pre></div><p><strong>Arguments</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>$#                          <span style=color:#75715e># Number of arguments</span>
+$*                          <span style=color:#75715e># All args</span>
+$1                          <span style=color:#75715e># First argument</span>
+</code></pre></div><h2 id=ifs-files>Ifs-files</h2><p><strong>File conditions</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -a FILE <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>        <span style=color:#75715e># -e exists         -d directory        -f file</span>
+<span style=color:#66d9ef>fi</span>                          <span style=color:#75715e># -r readable       -w writeable        -x executable</span>
+                            <span style=color:#75715e># -h symlink        -s size &gt; 0</span>
+
+<span style=color:#75715e># File comparisons</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> FILE1 -nt FILE2 <span style=color:#f92672>]</span>      <span style=color:#75715e># -nt   1 more recent than 2</span>
+                            <span style=color:#75715e># -ot   2 more recent than 1</span>
+                            <span style=color:#75715e># -ef   same files</span>
+</code></pre></div><h2 id=ifs>Ifs</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#75715e># String</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -z STRING <span style=color:#f92672>]</span>            <span style=color:#75715e># empty?</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -n STRING <span style=color:#f92672>]</span>            <span style=color:#75715e># not empty?</span>
+
+<span style=color:#75715e># Numeric</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> $? -eq <span style=color:#ae81ff>0</span> <span style=color:#f92672>]</span>             <span style=color:#75715e># -eq -ne -lt -le -gt -ge</span>
+                            <span style=color:#75715e># $? is exit status by the way</span>
+
+<span style=color:#75715e># Etc</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -o noclobber <span style=color:#f92672>]</span>         <span style=color:#75715e># if OPTIONNAME is enabled</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> ! EXPR <span style=color:#f92672>]</span>               <span style=color:#75715e># not</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> ONE -a TWO <span style=color:#f92672>]</span>           <span style=color:#75715e># and</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> ONE -o TWO <span style=color:#f92672>]</span>           <span style=color:#75715e># or</span>
+
+<span style=color:#75715e># Regex</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;A&#34;</span> <span style=color:#f92672>=</span>~ <span style=color:#e6db74>&#34;.&#34;</span> <span style=color:#f92672>]]</span>
+</code></pre></div><p><strong>Numeric comparisons</strong></p><p><code>if (( $a &lt; $b ))</code></p><p><strong>Unset variables</strong></p><p>Assume $FOO is not set. Doing this will result in that:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#e6db74>${</span>FOO<span style=color:#66d9ef>:-</span>word<span style=color:#e6db74>}</span>                <span style=color:#75715e># Returns word</span>
+<span style=color:#e6db74>${</span>FOO:+word<span style=color:#e6db74>}</span>                <span style=color:#75715e># Returns empty, or word if set</span>
+<span style=color:#e6db74>${</span>FOO:=word<span style=color:#e6db74>}</span>                <span style=color:#75715e># Sets parameter to word, returns word</span>
+<span style=color:#e6db74>${</span>FOO:?message<span style=color:#e6db74>}</span>             <span style=color:#75715e># Echoes message and exits</span>
+
+<span style=color:#e6db74>${</span>FOO=word<span style=color:#e6db74>}</span>                 <span style=color:#75715e># : is optional in all of the above</span>
+</code></pre></div><h2 id=numeric-calculations>Numeric Calculations</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>$((</span>RANDOM%<span style=color:#f92672>=</span><span style=color:#ae81ff>200</span><span style=color:#66d9ef>))</span>            <span style=color:#75715e># Random number 0..200</span>
+<span style=color:#66d9ef>$((</span>a <span style=color:#f92672>+</span> <span style=color:#ae81ff>200</span><span style=color:#66d9ef>))</span>                <span style=color:#75715e># $ is optional</span>
+</code></pre></div><h2 id=arrays>Arrays</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#75715e># Declaring using declare -a</span>
+declare -a Fruits<span style=color:#f92672>=(</span><span style=color:#e6db74>&#39;Apple&#39;</span> <span style=color:#e6db74>&#39;Banana&#39;</span> <span style=color:#e6db74>&#39;Orange&#39;</span><span style=color:#f92672>)</span>
+
+Fruits<span style=color:#f92672>[</span>0<span style=color:#f92672>]=</span><span style=color:#e6db74>&#34;Apple&#34;</span>
+Fruits<span style=color:#f92672>[</span>1<span style=color:#f92672>]=</span><span style=color:#e6db74>&#34;Banana&#34;</span>
+Fruits<span style=color:#f92672>[</span>2<span style=color:#f92672>]=</span><span style=color:#e6db74>&#34;Orange&#34;</span>
+
+echo <span style=color:#e6db74>${</span>Fruits[0]<span style=color:#e6db74>}</span>           <span style=color:#75715e># Element #0</span>
+echo <span style=color:#e6db74>${</span>Fruits[@]<span style=color:#e6db74>}</span>           <span style=color:#75715e># All elements, space-separated</span>
+echo <span style=color:#e6db74>${#</span>Fruits[@]<span style=color:#e6db74>}</span>          <span style=color:#75715e># Number of elements</span>
+echo <span style=color:#e6db74>${#</span>Fruits<span style=color:#e6db74>}</span>             <span style=color:#75715e># String length of the 1st element</span>
+echo <span style=color:#e6db74>${#</span>Fruits[3]<span style=color:#e6db74>}</span>          <span style=color:#75715e># String length of the Nth element</span>
+echo <span style=color:#e6db74>${</span>Fruits[@]:3:2<span style=color:#e6db74>}</span>       <span style=color:#75715e># Range (from position 3, length 2)</span>
+</code></pre></div><p><strong>Operations</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>Fruits<span style=color:#f92672>=(</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>Fruits[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;Watermelon&#34;</span><span style=color:#f92672>)</span>    <span style=color:#75715e># Push</span>
+Fruits<span style=color:#f92672>=(</span> <span style=color:#e6db74>${</span>Fruits[@]/Ap*/<span style=color:#e6db74>}</span> <span style=color:#f92672>)</span>            <span style=color:#75715e># Remove by regex match</span>
+unset Fruits<span style=color:#f92672>[</span>2<span style=color:#f92672>]</span>                         <span style=color:#75715e># Remove one item</span>
+Fruits<span style=color:#f92672>=(</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>Fruits[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span><span style=color:#f92672>)</span>                 <span style=color:#75715e># Duplicate</span>
+Fruits<span style=color:#f92672>=(</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>Fruits[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>Veggies[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span><span style=color:#f92672>)</span> <span style=color:#75715e># Concatenate</span>
+lines<span style=color:#f92672>=(</span><span style=color:#e6db74>`</span>cat <span style=color:#e6db74>&#34;logfile&#34;</span><span style=color:#e6db74>`</span><span style=color:#f92672>)</span>                 <span style=color:#75715e># Read from file</span>
+</code></pre></div><p><strong>Iterations</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>for</span> i in <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>arrayName[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>; <span style=color:#66d9ef>do</span>
+  echo $i
+<span style=color:#66d9ef>done</span>
+</code></pre></div><h2 id=misc-crap>Misc crap</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>command -V cd               <span style=color:#75715e>#=&gt; &#34;cd is a function/alias/whatever&#34;</span>
+</code></pre></div><p><strong>Options</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>set -o noclobber            <span style=color:#75715e># Avoid overlay files (echo &#34;hi&#34; &gt; foo)</span>
+set -o errexit              <span style=color:#75715e># Used to exit upon error, avoiding cascading errors</span>
+set -o pipefail             <span style=color:#75715e># Unveils hidden failures</span>
+set -o nounset              <span style=color:#75715e># Exposes unset variables</span>
+Glob options
+
+set -o nullglob             <span style=color:#75715e># Non-matching globs are removed  (&#39;*.foo&#39; =&gt; &#39;&#39;)</span>
+set -o failglob             <span style=color:#75715e># Non-matching globs throw errors</span>
+set -o nocaseglob           <span style=color:#75715e># Case insensitive globs</span>
+set -o globdots             <span style=color:#75715e># Wildcards match dotfiles (&#34;*.sh&#34; =&gt; &#34;.foo.sh&#34;)</span>
+set -o globstar             <span style=color:#75715e># Allow ** for recursive matches (&#39;lib/**/*.rb&#39; =&gt; &#39;lib/a/b/c.rb&#39;)</span>
+set GLOBIGNORE as a colon-separated list of patterns to be removed from glob matches.
+</code></pre></div><p><strong>Trap errors</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>trap <span style=color:#e6db74>&#39;echo Error at about $LINENO&#39;</span> ERR
+or
+
+traperr<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+  echo <span style=color:#e6db74>&#34;ERROR: </span><span style=color:#e6db74>${</span>BASH_SOURCE[1]<span style=color:#e6db74>}</span><span style=color:#e6db74> at about </span><span style=color:#e6db74>${</span>BASH_LINENO[0]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+<span style=color:#f92672>}</span>
+
+set -o errtrace
+trap traperr ERR
+</code></pre></div><p><strong>Case/switch</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>case</span> $1 in
+  start | up<span style=color:#f92672>)</span>
+    vagrant up
+    ;;
+
+  *<span style=color:#f92672>)</span>
+    echo <span style=color:#e6db74>&#34;Usage: </span>$0<span style=color:#e6db74> {start|stop|ssh}&#34;</span>
+    ;;
+<span style=color:#66d9ef>esac</span>
+Source relative
+
+source <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>0%/*<span style=color:#e6db74>}</span><span style=color:#e6db74>/../share/foo.sh&#34;</span>
+printf
+
+printf <span style=color:#e6db74>&#34;Hello %s, I&#39;m %s&#34;</span> Sven Olga
+Directory of script
+
+DIR<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>0%/*<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</code></pre></div><p><strong>Getting options</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#66d9ef>while</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>=</span>~ ^- <span style=color:#f92672>&amp;&amp;</span> ! <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;--&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>do</span> <span style=color:#66d9ef>case</span> $1 in
+  -V | --version <span style=color:#f92672>)</span>
+    echo $version
+    exit
+    ;;
+  -s | --string <span style=color:#f92672>)</span>
+    shift; string<span style=color:#f92672>=</span>$1
+    ;;
+  -f | --flag <span style=color:#f92672>)</span>
+    flag<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>
+    ;;
+<span style=color:#66d9ef>esac</span>; shift; <span style=color:#66d9ef>done</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;--&#39;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span> shift; <span style=color:#66d9ef>fi</span>
+</code></pre></div><p><strong>Heredoc</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>cat <span style=color:#e6db74>&lt;&lt;END
+</span><span style=color:#e6db74>hello world
+</span><span style=color:#e6db74>END</span>
+</code></pre></div><p>&ndash;Haoyang</p></div></article></main><aside><div><div><h3>LATEST POSTS</h3></div><div><ul><li><a href=/posts/create-responsive-shortcode/>Create Responsive Shortcode</a></li><li><a href=/posts/how-do-i-create-this-site/>How Do I Create This Site</a></li><li><a href=/posts/system-design/>System Design</a></li><li><a href=/posts/2017-11-15-ios-fundamentals-2/>iOS Fundamentals Part 2</a></li><li><a href=/posts/2017-11-15-ios-fundamentals-1/>iOS Fundamentals Part 1</a></li></ul></div></div></aside><footer><p>&copy; 2021 <a href=https://blog.peterchen.xyz/><b>颢阳</b></a>.
+<a href=https://github.com/advpetc><b>Github</b></a>.
+<a href=/imprint><b>Imprint</b></a>.</p></footer></body></html>
