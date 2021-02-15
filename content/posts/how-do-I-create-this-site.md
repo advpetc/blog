@@ -7,11 +7,10 @@ categories: ["tech"]
 tags: ["blogging"]
 ---
 
-I have browsed through a lot beautify sites which are created by github page, and I want to try a new statics site
-framework, so I started this site using **Hugo**.
+I have browsed through a lot of beautiful sites that are created by Github page, and I want to try a new statics site framework, so I started this site using **Hugo**.
 
 
-Here are the step by step guide that reproduced the entire process.
+Here are the step by step guide that reproduces the entire process.
 
 ## Install Hugo through Homebrew
 
@@ -21,16 +20,12 @@ Just follow what [Hugo Documentation](https://gohugo.io/getting-started/installi
 
 Before you install other themes, first run `$ hugo new site blog`. You will now have a folder called "blog", open this directory.
 
-I try out [ga-hugo-theme](https://github.com/giraffeacademy/ga-hugo-theme) from Graffeacademy by Mike Dane. 
-He also has a wonderful series of youtube videos showing you how to create the site from step zero, 
-refer here: {{< youtube WvhCGlLcrF8 >}}
+I try out [ga-hugo-theme](https://github.com/giraffeacademy/ga-hugo-theme) from Graffeacademy by Mike Dane. He also has a wonderful series of youtube videos showing you how to create the site from step zero, refer here: {{< youtube WvhCGlLcrF8 >}}
 
-To install a theme, you go to the theme folder and run `$ git clone <Github URL of the theme>`. Now if you dive into the themes folder,
-you can find the theme has the same structure as we have already.
+To install a theme, you go to the theme folder and run `$ git clone <Github URL of the theme>`. Now if you dive into the themes folder, you can find the theme has the same structure as we have already.
 
 ## Writing posts
-Now you can try create some posts under "content" directory. Do the following will create a post named "a.md" under "content/posts/" directory.
-
+Now you can try to create some posts under the "content" directory. Do the following will create a post named "a.md" under the "content/posts/" directory.
 
 `$ hugo new posts/a.md`
 
@@ -46,17 +41,16 @@ draft: true
 ```
 
 This is called [Front Matter](https://gohugo.io/content-management/front-matter/). Hugo has a very smart mechanism for using front matter, and you can
-check out the documentation.
+check out their documentation.
 
-Run `$ hugo server -D` to check out the new post you just created. Note the `-D` flag means it will publish the post even if it's a draft version (check draft front
-matter, we set it to true now).
+Run `$ hugo server -D` to check out the new post you just created. Note the `-D` flag means it will publish the post even if it's a draft version (check draft front matter, we set it to true now).
 
 
 ## Content structure: _index.md
 
 Each folder you created will by default has a "index page" showing a summary of all the files under that directory. Ideally, it should be:
 
-```
+```markdown
 Title: some summary
 
 * __link1 for post1__
@@ -68,7 +62,7 @@ You could also override this layout or content by creating a new file called "_i
 
 ## Design your layouts
 
-If you are using others' themes (which I do), you just need to know two different layouts for your blog: 
+If you are using others' themes (which I do), you need to know two different layouts for your blog: 
 1. single.html
 2. list.html
 
@@ -96,7 +90,6 @@ Here is what single.html looks like:
 {{ end }}
 ```
 
-
 In the block `{{ define "main" }}`, it defines a template called "main". In main, you can see `{{ .Title }}`, which is
 called [variables](https://gohugo.io/variables/site/). ".Title" (short for ".Params.Title") is also a site variable, which means it could be accessed
 site-wide. You can also find `{{ range .Params.tags }}`, and `range` is a [function](https://gohugo.io/templates/introduction/#functions).
@@ -104,9 +97,7 @@ site-wide. You can also find `{{ range .Params.tags }}`, and `range` is a [funct
 You don't need to create your function in most of cases, and you can check the refereces table from hugo documentation.
 
 However, there is one special layout I created: [shortcode](https://gohugo.io/content-management/shortcodes/#what-a-shortcode-is).
-I use it for inserting some embedded contents to my post, for example, a linkedin post. I create a file called "linkedin.html"
-under "layouts/shortcodes/". A shortcode is just a simple function that you could add it to your markdown file to show some nice
-embedded content like:
+I use it for inserting some embedded contents to my post, for example, a linkedin post. I create a file called "linkedin.html" under "layouts/shortcodes/". A shortcode is just a simple function that you could add it to your markdown file to show some nice embedded content like:
 
 ```
  {{</* youtube irhR5SkqswE */>}}
@@ -130,22 +121,20 @@ Creating a shortcode is also very simple, here is what I create:
 {{</* linkedin 6765427141384380416 */>}}
 ```
 shown as: 
-{{< linkedin 6765427141384380416 >}}.
+{{< linkedin 6765427141384380416 >}}
 
 Yay!
 
 
 ## Deployment with Github Page
 
-As the final step, I use Github action to build my website and host it through Github Page.
+As the final step, I use Github Action to build my website and host it through Github Page.
 
 I follow the [this](https://gohugo.io/hosting-and-deployment/hosting-on-github/#build-hugo-with-github-action) script to build my website.
 
-The only thing keeps in mind is that never forget to change all the draft to false, so that they will be shown correctly.
+The only thing to keep in mind is never forget to change all the draft parameter in each post to false, so that they will be shown correctly.
 
-
-I also use smol theme, so I need to set up the submodule for that Github repo under my "themes/". Create a ".gitmodules" under the root, and
-write:
+I also use smol theme, so I need to set up the submodule for that Github repo under my "themes/". Create a ".gitmodules" under the root, and write:
 
 ```
 [submodule "themes/smol"]
