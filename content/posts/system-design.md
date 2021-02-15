@@ -1,7 +1,7 @@
 ---
 title: "System Design"
 date: 2021-02-14T18:44:54-06:00
-draft: true
+draft: false
 author: "Peter"
 tags: ["design"]
 categories: ["tech"]
