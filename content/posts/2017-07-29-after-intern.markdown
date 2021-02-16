@@ -3,7 +3,7 @@ title:      "实习学习总结"
 date:       2017-07-29T10:57:30-12:00
 author:     "Peter"
 tags:       ["summary"]
-categories: ["life"]
+categories: ["tech"]
 
 ---
 
