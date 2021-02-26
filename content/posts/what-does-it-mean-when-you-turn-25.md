@@ -3,7 +3,7 @@ title: "What Does It Mean When You Turn 25"
 date: 2021-02-15T09:07:56-06:00
 draft: false
 author: "Peter"
-categories: ["life"]
+categories: ["life", "thoughts"]
 tags: ["growth"]
 ---
 
