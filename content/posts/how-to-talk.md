@@ -1,7 +1,7 @@
 ---
 title: "How to Talk"
 date: 2021-03-03T13:10:37-06:00
-draft: true
+draft: false
 author: "Peter"
 categories: ["thoughts"]
 ---
