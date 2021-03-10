@@ -15,3 +15,6 @@ categories: ["tech"]
 
 3. 中文总结<< Designing Data-Intensive Applications >>:
 [心得筆記](https://www.jyt0532.com/toc/designing_data_intensive-application/)
+
+4. leetcode post for system design:
+[link](https://leetcode.com/discuss/general-discussion/1082786/System-Design%3A-Designing-a-distributed-Job-Scheduler-or-Many-interesting-concepts-to-learn)
