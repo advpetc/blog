@@ -3,7 +3,8 @@ languageCode = "en-us"
 title = "颢阳's Blog"
 theme = "smol"
 copyright = "颢阳"
-summaryLength = 10
+hasCJKLanguage = true
+disqusShortname = "blog-zo8ylgqplu"
 
 [params]
     subtitle = "blog for everything"
