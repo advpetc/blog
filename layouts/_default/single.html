@@ -1,0 +1,57 @@
+{{ define "main" }}
+<main>
+  <article>
+    <h1>{{ .Title }}</h1>
+    {{ if or .Date .Params.tags .Params.categories }}
+      <p>
+        <b>
+          Posted
+          {{ if .Date }}
+            on <time>{{ .Date.Format (default "2006-01-02 15:04:05" .Site.Params.dateFmt) }}</time>
+          {{ end }}
+          {{ with .Params.categories }}
+            in
+            {{ range first 1 . }}
+              <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+            {{- end -}}
+            {{- range after 1 . -}}
+              , <a href="{{ "/categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+            {{- end -}}
+          {{ end }}
+        </b>
+        {{ with .WordCount }}
+          • {{ . }} words
+        {{ end }}
+        {{ with .ReadingTime }}
+          • {{ . }} minute read
+        {{ end }}
+        {{ with .Params.tags }}
+          <br>
+          Tags:
+          {{ range first 1 . }}
+            <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+          {{- end -}}
+          {{- range after 1 . -}}
+            , <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+          {{- end -}}
+        {{ end }}
+      </p>
+    {{ end }}
+    <div>
+      {{ .Content }}
+    </div>
+  </article>
+</main>
+{{ $reg := (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
+<div class="next-prev">
+  {{ with $reg.Prev . }}
+    <a class="prev" href="{{ .Permalink }}" title="{{ .Title }}">« {{ .Title | truncate 50 "..." }}</a>
+  {{ end }}
+  {{ with $reg.Next . }}
+    <a class="next" href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title | truncate 50 "..." }} »</a>
+  {{ end }}
+</div>
+{{ partial "sidebar.html" . }}
+{{ if and (or ($reg.Prev .) ($reg.Next .)) }}
+{{ end }}
+{{ end }}
