@@ -54,4 +54,5 @@
 {{ partial "sidebar.html" . }}
 {{ if and (or ($reg.Prev .) ($reg.Next .)) }}
 {{ end }}
+{{ template "_internal/disqus.html" . }}
 {{ end }}
