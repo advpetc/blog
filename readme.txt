@@ -1,6 +1,6 @@
 readme.txt
 
-:Author: Haoyang
+:Author: Pete
 :Email: me@peterchen.xyz
 :Date: 2021-03-01 21:44
 
