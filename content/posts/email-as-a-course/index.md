@@ -4,7 +4,7 @@ date: 2021-04-08T20:25:59-05:00
 draft: false
 author: "Peter"
 categories: ["thoughts"]
-tags: ["course"]
+tags: ["course", "email"]
 ---
 
 So it's my last semester of work in NYU, and I chose to take an independent study class with Prof. Yury Dvorkin. He is very busy on his research works, and I didn't really expect too much from this course (it's only 1.5 credit), so we agreed on meeting once per two weeks.
