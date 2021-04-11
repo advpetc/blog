@@ -1,5 +1,5 @@
 ---
-title: "Email as a Course"
+title: "Emailing as a Course"
 date: 2021-04-08T20:25:59-05:00
 draft: false
 author: "Peter"
@@ -39,9 +39,9 @@ I have mentioned my professor is qutie busy on his own studies, and we both knew
 
 My study is about using regression model to determine the demographic information with electric charging station. I use Python notebook from Colab to do all the analysis. One good thing about it is that you can easily share your code with others without the mess of setting up environment, sending back and forth a lot of documents (or even large dataset). However, it also forces me to write actual meaningful code to produce the expected result.
 
-Instead of using pure natural language to demnstate my idea, I choose to use data/image/number to validate my idea.![Screen Shot 2021-04-08 at 8.55.32 PM](resources/3.png "I created a map showing all the charging stations' location by zipcode")
+Instead of using pure natural language to demnstate my idea, I choose to use data/image/number to validate my idea.![Screen Shot 2021-04-08 at 8.55.32 PM](resources/3.png "I created a map showing all the charging stations' location by zipcode, it turns out the black area are actually 0 count stations, but I realize that afterwards")
 
-You probably won't get bored when you see this versus pure words. It indeed played well, and I could get more feedback from my professor.
+You probably won't get bored when you see this versus pure words. It indeed played well, and I could get more feedbacks from my professor.
 
 ## Conclusion
 
