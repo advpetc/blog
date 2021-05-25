@@ -43,7 +43,7 @@
   </article>
 </main>
 {{ $reg := (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
-<div class="next-prev">
+<div>
   {{ with $reg.Prev . }}
     <a class="prev" href="{{ .Permalink }}" title="{{ .Title }}">« {{ .Title | truncate 50 "..." }}</a>
   {{ end }}
@@ -51,8 +51,7 @@
     <a class="next" href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title | truncate 50 "..." }} »</a>
   {{ end }}
 </div>
+
 {{ partial "sidebar.html" . }}
-{{ if and (or ($reg.Prev .) ($reg.Next .)) }}
-{{ end }}
 {{ partial "disqus.html" . }}
 {{ end }}
