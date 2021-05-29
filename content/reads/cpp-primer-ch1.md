@@ -121,6 +121,6 @@ To use a class we need to know three things:
 ## Terms
 
 1. From `std::cout << "Enter two numbers:"; std::cout << std::endl;`, the message is a **string literal**, The second operator prints endl, which is a special value called a **manipulator**.
-2. The prefix `std::` indicates that the names `cout` and `endl` are defined inside the `namespace` named `std`. Namespace allows us to avoid inadvertent collision between the names we defined and uses of those same names inside a library.
-3. Conventionally, **header file names** are derived from the name of a class defined in that header. Header files that we write usually have a suffix of .h, but some program- mers use .H, .hpp, or .hxx.
+2. The prefix `std::` indicates that the names `cout` and `endl` are defined inside the `namespace` named `std`. **Namespace** allows us to avoid inadvertent collision between the names we defined and uses of those same names inside a library.
+3. Conventionally, **header file names** are derived from the name of a class defined in that header. Header files that we write usually have a suffix of .h, but some programmers use .H, .hpp, or .hxx.
 
