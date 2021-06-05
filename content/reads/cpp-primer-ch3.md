@@ -1,7 +1,7 @@
 ---
 title: "Cpp Primer Chapter 3"
 date: 2021-05-30T10:14:07-05:00
-draft: true
+draft: false
 author: "Peter"
 categories: ["book"]
 tags: ["cpp", "cpp primer"]
