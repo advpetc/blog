@@ -1,7 +1,7 @@
 ---
 title: "Cpp Primer Chapter 4"
 date: 2021-06-08T11:16:24-05:00
-draft: true
+draft: false
 author: "Peter"
 categories: ["tech"]
 tags: ["cpp", "cpp primer"]
