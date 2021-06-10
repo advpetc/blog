@@ -136,7 +136,7 @@ int c(ld), d = ld;   // ok: not using list init but the value will be truncated
 
 ### Reference
 
-When we define a reference, instead of copying the ini- tializer’s value, we **bind** the reference to its initializer.
+When we define a reference, instead of copying the initializer’s value, we **bind** the reference to its initializer.
 
 ```c++
 int ival = 1024;
@@ -468,5 +468,5 @@ Some note for writing header files:
      extern int iz; // declaration
      ```
 
-3. **Preprocessor**: The preprocessor — which C++ inherits from C — is a program that runs before the compiler and changes the source of text of our programs. C++ programs also use the preprocessor to define **header guards**. Preprocessor variables have one of two possible states: defined or not defined. The **#define** directive takes a name and defines that name as a preprocessor variable. There are two other direc- tives that test whether a given preprocessor variable has or has not been defined: **#ifdef** is true if the variable has been defined, and **#ifndef** is true if the variable has *not* been defined. If the test is true, then everything following the #ifdef or #ifndef is processed up to the matching **#endif**.
+3. **Preprocessor**: The preprocessor — which C++ inherits from C — is a program that runs before the compiler and changes the source of text of our programs. C++ programs also use the preprocessor to define **header guards**. Preprocessor variables have one of two possible states: defined or not defined. The **#define** directive takes a name and defines that name as a preprocessor variable. There are two other directives that test whether a given preprocessor variable has or has not been defined: **#ifdef** is true if the variable has been defined, and **#ifndef** is true if the variable has *not* been defined. If the test is true, then everything following the #ifdef or #ifndef is processed up to the matching **#endif**.
 

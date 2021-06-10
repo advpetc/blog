@@ -145,7 +145,7 @@ In the case of an iterator, that object is an element in a container or a charac
 
 ### Using iterators
 
-Unlike pointers, we do not use the address-of operator to obtain an iterator. In- stead, types that have iterators have members that return iterators. In particular, these types have members named **begin** and **end**. The begin member returns an iterator that denotes the first element (or first character), if there is one:
+Unlike pointers, we do not use the address-of operator to obtain an iterator. Instead, types that have iterators have members that return iterators. In particular, these types have members named **begin** and **end**. The begin member returns an iterator that denotes the first element (or first character), if there is one:
 
 ```c++
 auto b = v.begin(), e = v.end(); // b and e are the same type
@@ -331,7 +331,7 @@ else
 
 ### Interfacing to Older Code
 
-Many C++ programs predate the standard library and do not use the string and vector types. Moreover, many C++ programs interface to programs written in C or other languages that cannot use the C++ library. Hence, programs written in modern C++ may have to interface to code that uses arrays and/or C-style charac- ter strings. The C++ library offers facilities to make the interface easier to manage.
+Many C++ programs predate the standard library and do not use the string and vector types. Moreover, many C++ programs interface to programs written in C or other languages that cannot use the C++ library. Hence, programs written in modern C++ may have to interface to code that uses arrays and/or C-style character strings. The C++ library offers facilities to make the interface easier to manage.
 
 Transform a string to char array:
 
@@ -370,7 +370,7 @@ int ia[3][4] = {{0}, {4}, {8}}; // we don't need to fill all the rows
 int ix[3][4] = {0, 3, 6, 9};
 ```
 
-To use a multidimensional array in a range for, the loop control vari- able for all but the innermost array must be references.
+To use a multidimensional array in a range for, the loop control variable for all but the innermost array must be references.
 
 ```c++
 // this will work, since row is a reference
@@ -387,7 +387,7 @@ for (auto row : ia)
 
 ## Term
 
-1. `std::size_type`: The string class—and most other library types—defines several compan- ion types. These companion types make it possible to use the library types in a machine-independent manner. The type **size_type** is one of these companion types. To use the size_type defined by string, we use the scope operator to say that the name size_type is defined in the string class. Although we don’t know the precise type of string::size_type, we do know that it is an `unsigned` type big enough to hold the size of any string.
+1. `std::size_type`: The string class—and most other library types—defines several companion types. These companion types make it possible to use the library types in a machine-independent manner. The type **size_type** is one of these companion types. To use the size_type defined by string, we use the scope operator to say that the name size_type is defined in the string class. Although we don’t know the precise type of string::size_type, we do know that it is an `unsigned` type big enough to hold the size of any string.
 
 2. `cctype` funtions: ![](https://i.imgur.com/nhe7SUz.png)
 
