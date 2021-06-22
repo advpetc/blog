@@ -1,7 +1,7 @@
 ---
 title: "Cpp Primer Chapter 5"
 date: 2021-06-22T16:54:08-05:00
-draft: true
+draft: false
 author: "Peter"
 categories: ["tech"]
 tags: ["cpp", "cpp primer"]
@@ -13,14 +13,12 @@ This chapter looks in detail at the statements supported by C++. *Statements* ar
 
 ### Null Statements
 
- The simplest statement is the empty statement, also known as a **null statement**. A
-
-null statement is a single semicolon: `;`. A null statement is useful where the language requires a statement but the program’s logic does not. Such usage is most common when a loop’s work can be done within its condition. For example, we might want to read an input stream, ignoring everything we read until we encounter a particular value:
+The simplest statement is the empty statement, also known as a **null statement**. A null statement is a single semicolon: `;`. A null statement is useful where the language requires a statement but the program’s logic does not. Such usage is most common when a loop’s work can be done within its condition. For example, we might want to read an input stream, ignoring everything we read until we encounter a particular value:
 
 ```c++
 // read until we hit end-of-file or find an input equal to sought
 while (cin >> s && s != sought)
-  ; // null statement
+	; // null statement
 ```
 
 ### Compound Statements
@@ -74,7 +72,7 @@ If the expression matches the value of a `case` label, execution begins with the
 ```c++
 switch (ch) {
   // alternative legal syntax
-  case ’a’: case ’e’: case ’i’: case ’o’: case ’u’:
+  case 'a': case 'e': case 'i': case 'o': case 'u':
     ++vowelCnt;
     break;
 }
@@ -129,8 +127,6 @@ This won't work, will throw "initialization of 'newVal' is skipped by 'case' lab
       ... 
       break;
   }
-
-
 ```
 
 **Exercise 5.10**: There is one problem with our vowel-counting program as we’ve implemented it: It doesn’t count capital letters as vowels. Write a program that counts both lower- and uppercase letters as the appropriate vowel—that is, your program should count both ’a’ and ’A’ as part of aCnt, and so forth.
@@ -138,12 +134,51 @@ This won't work, will throw "initialization of 'newVal' is skipped by 'case' lab
 **Answer**:
 
 ```c++
-#include <iostream>using std::cin; using std::cout; using std::endl;int main(){    unsigned aCnt = 0, eCnt = 0, iCnt = 0, oCnt = 0, uCnt = 0;    char ch;    while (cin >> ch)        switch (ch)        {            case 'a': // two case can be combined            case 'A':                ++aCnt;                break;            case 'e':            case 'E':                ++eCnt;                break;            case 'i':            case 'I':                ++iCnt;                break;            case 'o':            case 'O':                ++oCnt;                break;            case 'u':            case 'U':                ++uCnt;                break;        }               cout << "Number of vowel a(A): \t" << aCnt << '\n'         << "Number of vowel e(E): \t" << eCnt << '\n'         << "Number of vowel i(I): \t" << iCnt << '\n'         << "Number of vowel o(O): \t" << oCnt << '\n'         << "Number of vowel u(U): \t" << uCnt << endl;        return 0;}
+#include <iostream>
+using std::cin; using std::cout; using std::endl;
+
+int main()
+{
+    unsigned aCnt = 0, eCnt = 0, iCnt = 0, oCnt = 0, uCnt = 0;
+    char ch;
+    while (cin >> ch)
+        switch (ch)
+        {
+            case 'a':
+            case 'A':
+                ++aCnt;
+                break;
+            case 'e':
+            case 'E':
+                ++eCnt;
+                break;
+            case 'i':
+            case 'I':
+                ++iCnt;
+                break;
+            case 'o':
+            case 'O':
+                ++oCnt;
+                break;
+            case 'u':
+            case 'U':
+                ++uCnt;
+                break;
+        }
+           
+    cout << "Number of vowel a(A): \t" << aCnt << '\n'
+         << "Number of vowel e(E): \t" << eCnt << '\n'
+         << "Number of vowel i(I): \t" << iCnt << '\n'
+         << "Number of vowel o(O): \t" << oCnt << '\n'
+         << "Number of vowel u(U): \t" << uCnt << endl;
+    
+    return 0;
+}
 ```
 
 ## Iterative Statements
 
-Iterative statements, commonly called loops, provide for repeated execution un- til a condition is true. The while and for statements test the condition before executing the body. The do while executes the body and then tests its condition.
+Iterative statements, commonly called loops, provide for repeated execution until a condition is true. The while and for statements test the condition before executing the body. The do while executes the body and then tests its condition.
 
 ### Range `for` Statement
 
@@ -157,10 +192,12 @@ for (declaration : expression)	statement
 
 ### The `do while` Statement
 
-A **do while** **statement** is like a while but the condition is tested after the state- ment body completes. Regardless of the value of the condition, we execute the loop at least once. The syntactic form is as follows:
+A **do while** **statement** is like a while but the condition is tested after the statement body completes. Regardless of the value of the condition, we execute the loop at least once. The syntactic form is as follows:
 
 ```
-do	statementwhile (condition);
+do	
+	statement
+while (condition);
 ```
 
 **Note**: A `do while` ends with a `;` after the `()`.
@@ -184,7 +221,11 @@ The goto and the labeled statement to which it transfers control must be in the 
 Jumping backward over an already executed definition is okay. The variable that has been defined before is going to be constructed again:
 
 ```c++
-begin:	int sz = get_size();  if (sz <= 0) {    goto begin;  }
+begin:
+	int sz = get_size();
+	if (sz <= 0) {
+		goto begin;  
+	}
 ```
 
 ## `try` Blocks and Exception Handling 
@@ -200,13 +241,26 @@ Exception handling supports this cooperation between the detecting and handling 
 The detecting part of a program uses a throw expression to raise an exception. A throw consists of the keyword throw followed by an expression. The type of the expression determines what kind of exception is thrown. A throw expression is usually followed by a semicolon, making it into an expression statement.
 
 ```c++
-Sales_item item1, item2;cin >> item1 >> item2;// first check that item1 and item2 represent the same bookif (item1.isbn() == item2.isbn()) {  cout << item1 + item2 << endl;  return 0;} else {  cerr << "Data must refer to the same ISBN" << endl;  return -1;}
+Sales_item item1, item2;
+cin >> item1 >> item2;
+// first check that item1 and item2 represent the same book 
+if (item1.isbn() == item2.isbn()) {
+	cout << item1 + item2 << endl;
+	return 0; // indicate success 	
+} else {
+	cerr << "Data must refer to same ISBN" << endl;
+	return -1; // indicate failure 
+}
 ```
 
 In a more realistic program, the part that adds the objects might be separated from the part that manages the interaction with a user. In this case, we might rewrite the test to throw an exception rather than returning an error indicator:
 
 ```c++
-// first check that item1 and item2 represent the same bookif (item1.isbn() != item2.isbn()) {  throw runtime_error("Data must refer to the same ISBN");}cout << item1 + item2 << endl;
+// first check that item1 and item2 represent the same book
+if (item1.isbn() != item2.isbn()) {  
+	throw runtime_error("Data must refer to the same ISBN");
+}
+cout << item1 + item2 << endl;
 ```
 
 The type `runtime_error` is one of the standard library exception types and is defined in the `stdexcept` header. More about `runtime_error` check [cppreference.com](https://en.cppreference.com/w/cpp/error/runtime_error).
@@ -216,7 +270,18 @@ The type `runtime_error` is one of the standard library exception types and is d
 An example:
 
 ```c++
-while (cin >> item1 >> item2) {  try {    // code that will add two items    // if the addition fails, it will throw a runtime_error exception  } catch (runtime_error err) {    cout << err.what() << "\nTry Again?" << endl;    char c;    cin >> c;    if (!cin || c == 'n')      break; // break the outter loop  }}
+while (cin >> item1 >> item2) {  
+  try {    
+    // code that will add two items    
+    // if the addition fails, it will throw a runtime_error exception  
+  } catch (runtime_error err) {    
+    cout << err.what() << "\nTry Again?" << endl;    
+    char c;    
+    cin >> c;    
+    if (!cin || c == 'n')      
+      break; // break the outter loop  
+  }
+}
 ```
 
 If no appropriate catch is found, execution is transferred to a library function named **terminate**. The behavior of that function is system dependent but is guaranteed to stop further execution of the program. Exceptions that occur in programs that **do not define any try blocks** are handled in the same manner: After all, if there are no try blocks, there can be no handlers. If a program has no try blocks and an exception occurs, then terminate is called and the program is exited.
