@@ -1,0 +1,172 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><style type=text/css>body{font-family:monospace}</style><title>Cpp Primer Chapter 5</title><link rel=stylesheet href=/css/style.css></head><body><header>===================<br>== <a href=https://blog.peterchen.xyz/>颢阳's Blog</a> ==<br>===================<div style=float:right>blog for everything</div><br><p><nav><a href=/><b>Start</b></a>.
+<a href=/posts/><b>Posts</b></a>.
+<a href=/reads/><b>Reads</b></a>.
+<a href=/categories/><b>Categories</b></a>.
+<a href=/tags/><b>Tags</b></a>.</nav></p><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']],processEscapes:!0,processEnvironments:!0},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}},window.addEventListener('load',a=>{document.querySelectorAll("mjx-container").forEach(function(a){a.parentElement.classList+='has-jax'})})</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest></header><main><article><h1>Cpp Primer Chapter 5</h1><p><b>Posted
+on <time>06.22.2021 16:54</time>
+in
+<a href=/categories/tech>tech</a></b>
+• 1937 words
+• 10 minute read<br>Tags:
+<a href=/tags/cpp>cpp</a>, <a href=/tags/cpp-primer>cpp primer</a></p><div><p>This chapter looks in detail at the statements supported by C++. <em>Statements</em> are executed sequentially. Except for the simplest programs, sequential execution is inadequate. Therefore, C++ also defines a set of <strong>flow-of-control</strong> statements that allow more complicated execution paths.</p><h2 id=simple-statements>Simple Statements</h2><h3 id=null-statements>Null Statements</h3><p>The simplest statement is the empty statement, also known as a <strong>null statement</strong>. A null statement is a single semicolon: <code>;</code>. A null statement is useful where the language requires a statement but the program’s logic does not. Such usage is most common when a loop’s work can be done within its condition. For example, we might want to read an input stream, ignoring everything we read until we encounter a particular value:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#75715e>// read until we hit end-of-file or find an input equal to sought
+</span><span style=color:#75715e></span><span style=color:#66d9ef>while</span> (cin <span style=color:#f92672>&gt;&gt;</span> s <span style=color:#f92672>&amp;&amp;</span> s <span style=color:#f92672>!=</span> sought)
+	; <span style=color:#75715e>// null statement
+</span></code></pre></div><h3 id=compound-statements>Compound Statements</h3><p>Compound statements are used when the language requires a single statement but the logic of our program needs more than one. For example, the body of a while or for loop must be a single statement, yet we often need to execute more than one statement in the body of a loop. We do so by enclosing the statements in curly braces, thus turning the sequence of statements into a block. For example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>while</span> (val <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>10</span>) {
+  sum <span style=color:#f92672>+=</span> val;
+  <span style=color:#f92672>++</span>val; 
+}
+</code></pre></div><p>The logic of our program needed two statements but a while loop may contain only one statement. By enclosing these statements in curly braces, we made them into a single (compound) statement.</p><h2 id=conditional-statements>Conditional Statements</h2><p>C++ provides two statements that allow for conditional execution. The <code>if</code> statement determines the flow of control based on a condition. The <code>switch</code> statement evaluates an integral expression and chooses one of several execution paths based on the expression’s value.</p><h3 id=dangling-else>Dangling <code>else</code></h3><p>When we nest an if inside another if, it is possible that there will be <strong>more if branches than else branches</strong>. Indeed, our grading program has four ifs and two elses. The question arises: How do we know to which if a given else belongs? Different languages solve this problem in different ways. In C++ the ambiguity is resolved by specifying that each else is matched with the <strong>closest preceding unmatched if</strong>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>if</span> (grade <span style=color:#f92672>%</span> <span style=color:#ae81ff>10</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>3</span>)
+  <span style=color:#66d9ef>if</span> (grade <span style=color:#f92672>%</span> <span style=color:#ae81ff>10</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>7</span>)
+    	lettergrade <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;+&#39;</span>;
+<span style=color:#66d9ef>else</span>
+  lettergrade <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;-&#39;</span>;
+</code></pre></div><p><code>else</code> doesn&rsquo;t match indentation; the <code>else</code> goes with the inner <code>if</code>. What it actualy means is:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>if</span> (grade <span style=color:#f92672>%</span> <span style=color:#ae81ff>10</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>3</span>) {
+  <span style=color:#66d9ef>if</span> (grade <span style=color:#f92672>%</span> <span style=color:#ae81ff>10</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>7</span>)
+    	lettergrade <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;+&#39;</span>;
+	<span style=color:#66d9ef>else</span>
+  	lettergrade <span style=color:#f92672>+=</span> <span style=color:#e6db74>&#39;-&#39;</span>;
+}
+</code></pre></div><h3 id=the-switch-statement>The <code>switch</code> Statement</h3><p>A switch statement executes by evaluating the parenthesized expression that follows the keyword switch. That expression may be an initialized variable declaration. The expression is converted to integral type. The result of the expression is compared with the value associated with each case.</p><p>If the expression matches the value of a <code>case</code> label, execution begins with the first statement following that label. Execution continues normally from that statement through the end of the switch or until a <code>break</code> statement.</p><p><strong>Multiple case stacked together</strong>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>switch</span> (ch) {
+  <span style=color:#75715e>// alternative legal syntax
+</span><span style=color:#75715e></span>  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;a&#39;</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;e&#39;</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;i&#39;</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;o&#39;</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;u&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>vowelCnt;
+    <span style=color:#66d9ef>break</span>;
+}
+</code></pre></div><p><strong>Note</strong>: Omitting a break at the end of a case happens rarely. If you do omit a break, include a comment explaining the logic.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>switch</span> (ch) {
+  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;a&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>aCnt; 
+  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;e&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>eCnt; 
+  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;i&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>iCnt;  
+  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;o&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>oCnt;
+  <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;u&#39;</span><span style=color:#f92672>:</span>
+    <span style=color:#f92672>++</span>uCnt;
+}
+</code></pre></div><p>To understand what happens, assume that the value of ch is &lsquo;e&rsquo;. Execution jumps to the code following the case &lsquo;e&rsquo; label, which increments eCnt. Execution <em>continues</em> across the case labels, incrementing iCnt, oCnt, and uCnt as well.</p><p><strong>Variable Definition inside the Body of a <code>switch</code></strong>:</p><p>see <a href=https://stackoverflow.com/a/19830820>this</a> for a detailed explanation of why you can&rsquo;t declare variables after a case label. For example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++>  <span style=color:#66d9ef>switch</span> (val) {
+    <span style=color:#66d9ef>case</span> VAL:
+      <span style=color:#75715e>// This won&#39;t work
+</span><span style=color:#75715e></span>      <span style=color:#66d9ef>int</span> newVal <span style=color:#f92672>=</span> <span style=color:#ae81ff>42</span>;
+      <span style=color:#66d9ef>break</span>;
+    <span style=color:#66d9ef>case</span> ANOTHER_VAL:
+      ... 
+      <span style=color:#66d9ef>break</span>;
+  }
+
+</code></pre></div><p>This won&rsquo;t work, will throw &ldquo;initialization of &lsquo;newVal&rsquo; is skipped by &lsquo;case&rsquo; label&rdquo;. A fix to this is by specifying the scope after each <code>case</code>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++>  <span style=color:#66d9ef>switch</span> (val) {
+    <span style=color:#66d9ef>case</span> VAL: {
+      <span style=color:#75715e>// This won&#39;t work
+</span><span style=color:#75715e></span>      <span style=color:#66d9ef>int</span> newVal <span style=color:#f92672>=</span> <span style=color:#ae81ff>42</span>;
+      <span style=color:#66d9ef>break</span>;
+    }
+    <span style=color:#66d9ef>case</span> ANOTHER_VAL:
+      ... 
+      <span style=color:#66d9ef>break</span>;
+  }
+</code></pre></div><p><strong>Exercise 5.10</strong>: There is one problem with our vowel-counting program as we’ve implemented it: It doesn’t count capital letters as vowels. Write a program that counts both lower- and uppercase letters as the appropriate vowel—that is, your program should count both ’a’ and ’A’ as part of aCnt, and so forth.</p><p><strong>Answer</strong>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>cin; <span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>cout; <span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>endl;
+
+<span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+{
+    <span style=color:#66d9ef>unsigned</span> aCnt <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, eCnt <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, iCnt <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, oCnt <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, uCnt <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+    <span style=color:#66d9ef>char</span> ch;
+    <span style=color:#66d9ef>while</span> (cin <span style=color:#f92672>&gt;&gt;</span> ch)
+        <span style=color:#66d9ef>switch</span> (ch)
+        {
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;a&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;A&#39;</span><span style=color:#f92672>:</span>
+                <span style=color:#f92672>++</span>aCnt;
+                <span style=color:#66d9ef>break</span>;
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;e&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;E&#39;</span><span style=color:#f92672>:</span>
+                <span style=color:#f92672>++</span>eCnt;
+                <span style=color:#66d9ef>break</span>;
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;i&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;I&#39;</span><span style=color:#f92672>:</span>
+                <span style=color:#f92672>++</span>iCnt;
+                <span style=color:#66d9ef>break</span>;
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;o&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;O&#39;</span><span style=color:#f92672>:</span>
+                <span style=color:#f92672>++</span>oCnt;
+                <span style=color:#66d9ef>break</span>;
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;u&#39;</span><span style=color:#f92672>:</span>
+            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#39;U&#39;</span><span style=color:#f92672>:</span>
+                <span style=color:#f92672>++</span>uCnt;
+                <span style=color:#66d9ef>break</span>;
+        }
+           
+    cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Number of vowel a(A): </span><span style=color:#ae81ff>\t</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&lt;&lt;</span> aCnt <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#39;\n&#39;</span>
+         <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Number of vowel e(E): </span><span style=color:#ae81ff>\t</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&lt;&lt;</span> eCnt <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#39;\n&#39;</span>
+         <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Number of vowel i(I): </span><span style=color:#ae81ff>\t</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&lt;&lt;</span> iCnt <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#39;\n&#39;</span>
+         <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Number of vowel o(O): </span><span style=color:#ae81ff>\t</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&lt;&lt;</span> oCnt <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#39;\n&#39;</span>
+         <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Number of vowel u(U): </span><span style=color:#ae81ff>\t</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&lt;&lt;</span> uCnt <span style=color:#f92672>&lt;&lt;</span> endl;
+    
+    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+}
+</code></pre></div><h2 id=iterative-statements>Iterative Statements</h2><p>Iterative statements, commonly called loops, provide for repeated execution until a condition is true. The while and for statements test the condition before executing the body. The do while executes the body and then tests its condition.</p><h3 id=range-for-statement>Range <code>for</code> Statement</h3><p>The new standard introduced a simpler for statement that can be used to iterate through the elements of a container or other sequence. The syntactic form of the <strong>range</strong> <strong>for</strong> <strong>statement</strong> is:</p><pre><code>for (declaration : expression)	statement
+</code></pre><p><em>expression</em> must represent a sequence, such as a braced initializer list, an array, or an object of a type such as vector or string that has begin and end members that return **iterators **(chapter 4).</p><h3 id=the-do-while-statement>The <code>do while</code> Statement</h3><p>A <strong>do while</strong> <strong>statement</strong> is like a while but the condition is tested after the statement body completes. Regardless of the value of the condition, we execute the loop at least once. The syntactic form is as follows:</p><pre><code>do	
+	statement
+while (condition);
+</code></pre><p><strong>Note</strong>: A <code>do while</code> ends with a <code>;</code> after the <code>()</code>.</p><h2 id=jump-statements><code>Jump</code> Statements</h2><p>Jump statements interrupt the flow of execution. C++ offers four jumps: break, continue, and goto, which we cover in this chapter, and the return statement, which we’ll describe in § 6.3 (p. 222).</p><h3 id=the-goto--statement>The <code>goto</code> Statement</h3><p>A <strong>goto</strong> <strong>statement</strong> provides an unconditional jump from the goto to a another statement in the same function.</p><p>The syntactic form of a goto statement is <code>goto *label*;</code> where <em>label</em> is an identifier that identifies a statement. A <strong>labeled statement</strong> is any statement that is preceded by an identifier followed by a colon:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++>end: <span style=color:#66d9ef>return</span>; <span style=color:#75715e>// end is a label where goto will point to
+</span></code></pre></div><p>The goto and the labeled statement to which it transfers control must be in the <strong>same function</strong>.</p><p>Jumping backward over an already executed definition is okay. The variable that has been defined before is going to be constructed again:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++>begin:
+	<span style=color:#66d9ef>int</span> sz <span style=color:#f92672>=</span> get_size();
+	<span style=color:#66d9ef>if</span> (sz <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span>) {
+		<span style=color:#66d9ef>goto</span> begin;  
+	}
+</code></pre></div><h2 id=try-blocks-and-exception-handling><code>try</code> Blocks and Exception Handling</h2><p>Exception handling supports this cooperation between the detecting and handling parts of a program. In C++, exception handling involves</p><ul><li><strong>throw</strong> <strong>expressions</strong>, which the detecting part uses to indicate that it encountered something it can’t handle. We say that a throw <strong>raises</strong> an exception.</li><li><strong>try</strong> <strong>blocks</strong>, which the handling part uses to deal with an exception. A try block starts with the keyword <strong>try</strong> and ends with one or more <strong>catch</strong> <strong>clauses</strong>. Exceptions thrown from code executed inside a try block are usually handled by one of the catch clauses. Because they &ldquo;handle&rdquo; the exception, catch clauses are also known as <strong>exception handlers</strong>.</li><li>A set of <strong>exception</strong> <strong>classes</strong> that are used to pass information about what happened between a throw and an associated catch.</li></ul><h3 id=a-throw-expression>A <code>throw</code> Expression</h3><p>The detecting part of a program uses a throw expression to raise an exception. A throw consists of the keyword throw followed by an expression. The type of the expression determines what kind of exception is thrown. A throw expression is usually followed by a semicolon, making it into an expression statement.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++>Sales_item item1, item2;
+cin <span style=color:#f92672>&gt;&gt;</span> item1 <span style=color:#f92672>&gt;&gt;</span> item2;
+<span style=color:#75715e>// first check that item1 and item2 represent the same book 
+</span><span style=color:#75715e></span><span style=color:#66d9ef>if</span> (item1.isbn() <span style=color:#f92672>==</span> item2.isbn()) {
+	cout <span style=color:#f92672>&lt;&lt;</span> item1 <span style=color:#f92672>+</span> item2 <span style=color:#f92672>&lt;&lt;</span> endl;
+	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>; <span style=color:#75715e>// indicate success 	
+</span><span style=color:#75715e></span>} <span style=color:#66d9ef>else</span> {
+	cerr <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Data must refer to same ISBN&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;
+	<span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>; <span style=color:#75715e>// indicate failure 
+</span><span style=color:#75715e></span>}
+</code></pre></div><p>In a more realistic program, the part that adds the objects might be separated from the part that manages the interaction with a user. In this case, we might rewrite the test to throw an exception rather than returning an error indicator:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#75715e>// first check that item1 and item2 represent the same book
+</span><span style=color:#75715e></span><span style=color:#66d9ef>if</span> (item1.isbn() <span style=color:#f92672>!=</span> item2.isbn()) {  
+	<span style=color:#66d9ef>throw</span> <span style=color:#a6e22e>runtime_error</span>(<span style=color:#e6db74>&#34;Data must refer to the same ISBN&#34;</span>);
+}
+cout <span style=color:#f92672>&lt;&lt;</span> item1 <span style=color:#f92672>+</span> item2 <span style=color:#f92672>&lt;&lt;</span> endl;
+</code></pre></div><p>The type <code>runtime_error</code> is one of the standard library exception types and is defined in the <code>stdexcept</code> header. More about <code>runtime_error</code> check <a href=https://en.cppreference.com/w/cpp/error/runtime_error>cppreference.com</a>.</p><h3 id=the-try-block>The <code>try</code> Block</h3><p>An example:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#66d9ef>while</span> (cin <span style=color:#f92672>&gt;&gt;</span> item1 <span style=color:#f92672>&gt;&gt;</span> item2) {  
+  <span style=color:#66d9ef>try</span> {    
+    <span style=color:#75715e>// code that will add two items    
+</span><span style=color:#75715e></span>    <span style=color:#75715e>// if the addition fails, it will throw a runtime_error exception  
+</span><span style=color:#75715e></span>  } <span style=color:#66d9ef>catch</span> (runtime_error err) {    
+    cout <span style=color:#f92672>&lt;&lt;</span> err.what() <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>Try Again?&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;    
+    <span style=color:#66d9ef>char</span> c;    
+    cin <span style=color:#f92672>&gt;&gt;</span> c;    
+    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>cin <span style=color:#f92672>||</span> c <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;n&#39;</span>)      
+      <span style=color:#66d9ef>break</span>; <span style=color:#75715e>// break the outter loop  
+</span><span style=color:#75715e></span>  }
+}
+</code></pre></div><p>If no appropriate catch is found, execution is transferred to a library function named <strong>terminate</strong>. The behavior of that function is system dependent but is guaranteed to stop further execution of the program. Exceptions that occur in programs that <strong>do not define any try blocks</strong> are handled in the same manner: After all, if there are no try blocks, there can be no handlers. If a program has no try blocks and an exception occurs, then terminate is called and the program is exited.</p><p>Here is a rule of thumb of multiple catch: <a href=https://stackoverflow.com/a/2512970>link</a></p><h2 id=standard-exceptions>Standard Exceptions</h2><p>The C++ library defines several classes that it uses to report problems encountered in the functions in the standard library. These exception classes are also intended to be used in the programs we write. These classes are defined in four headers:</p><ul><li>The <code>exception</code> header defines the most general kind of exception class named <code>exception</code>. It communicates only that an exception occurred but provides no additional information.</li><li>The <code>stdexcept</code> header defines several general-purpose exception classes, which are listed in Table 5.1.</li><li>The new header defines the <code>bad_alloc</code> exception type, which we cover in § 12.1.2 (p. 458).</li><li>The <code>type_info</code> header defines the <code>bad_cast</code> exception type, which we cover in § 19.2 (p. 825).</li></ul><p><figure><img src=resources/5.png alt="Screen Shot 2021-06-22 at 4.52.41 PM"></figure></p><h3 id=exercise>Exercise</h3><p><strong>Exercise 5.25:</strong> Revise your program from the previous exercise to use a try block to catch the exception. The catch clause should print a message to the user and ask them to supply a new number and repeat the code inside the try.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdexcept&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>cin; <span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>cout; <span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>endl; <span style=color:#66d9ef>using</span> std<span style=color:#f92672>::</span>runtime_error;
+
+<span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>void</span>)
+{
+    <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i, j; cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Input two integers:</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, cin <span style=color:#f92672>&gt;&gt;</span> i <span style=color:#f92672>&gt;&gt;</span> j; )
+    {
+        <span style=color:#66d9ef>try</span> 
+        {
+            <span style=color:#66d9ef>if</span> (j <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>) 
+                <span style=color:#66d9ef>throw</span> runtime_error(<span style=color:#e6db74>&#34;divisor is 0&#34;</span>);
+            cout <span style=color:#f92672>&lt;&lt;</span> i <span style=color:#f92672>/</span> j <span style=color:#f92672>&lt;&lt;</span> endl;
+        }
+        <span style=color:#66d9ef>catch</span> (runtime_error err) 
+        {
+            cout <span style=color:#f92672>&lt;&lt;</span> err.what() <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>Try again? Enter y or n&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;
+            <span style=color:#66d9ef>char</span> c;
+            cin <span style=color:#f92672>&gt;&gt;</span> c;
+            <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>cin <span style=color:#f92672>||</span> c <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;n&#39;</span>)
+                <span style=color:#66d9ef>break</span>;
+        }
+    }
+
+    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+}
+</code></pre></div></div></article></main><div><a class=prev href=https://blog.peterchen.xyz/reads/cpp-primer-ch4/ title="Cpp Primer Chapter 4">« Cpp Primer Chapter 4</a></div><aside><div><div><h3>LATEST POSTS</h3></div><div><ul><li><a href=/reads/cpp-primer-c5/>Cpp Primer Chapter 5</a></li><li><a href=/reads/cpp-primer-ch4/>Cpp Primer Chapter 4</a></li><li><a href=/reads/cpp-primer-ch3/>Cpp Primer Chapter 3</a></li><li><a href=/reads/cpp-primer-ch2/>Cpp Primer Chapter 2</a></li><li><a href=/reads/cpp-primer-ch1/>Cpp Primer Chapter 1</a></li></ul></div></div></aside><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//blog-zo8ylgqplu.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a><footer><p>&copy; 2021 <a href=https://blog.peterchen.xyz/><b>颢阳</b></a>.
+<a href=https://github.com/advpetc><b>Github</b></a>.
+<a href=/imprint><b>Imprint</b></a>.</p></footer></body></html>
